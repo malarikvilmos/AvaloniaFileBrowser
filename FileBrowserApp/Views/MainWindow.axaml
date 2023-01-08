@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FileBrowserApp.ViewModels"
+        xmlns:v="using:FileBrowserApp.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="FileBrowserApp.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+		Title="Avalonia File Explorer"
+		Width="1024" Height="768"
+		Background="#eeeeee"
+		CanResize="True"
+		WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<Grid ColumnDefinitions="*, 25, *">
+		<v:FolderView DataContext="{Binding LeftVM}" Grid.Column="0"/>
+		<v:FolderView DataContext="{Binding RightVM}" Grid.Column="2"/>
+	</Grid>
+
+</Window>

@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:FileBrowserApp.ViewModels"
+			 xmlns:v="using:FileBrowserApp.Views"
+			 xmlns:c="using:FileBrowserApp.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FileBrowserApp.Views.FolderView">
+
+	<Design.DataContext>
+		<vm:FolderViewViewModel/>
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<c:SizeConverter x:Key="sizeConverter"/>
+	</UserControl.Resources>
+	
+	<Grid RowDefinitions="*, *, 20*">
+		<TextBlock Grid.Row="1" Margin="10" Text="{Binding CurrentPath}" VerticalAlignment="Center"/>
+		<Grid Grid.Row="0" ColumnDefinitions="10, auto, 10, *">	
+			<ComboBox Grid.Column="1" Items="{Binding Drives}" SelectedItem="{Binding SelectedDrive, Mode=TwoWay}" SelectedIndex="0"
+					  HorizontalAlignment="Left" VerticalAlignment="Center">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0}{1}">
+									<Binding Path="Name" FallbackValue="C:\"/>
+									<Binding Path="VolumeLabel" StringFormat="  | {0}" FallbackValue=""/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<StackPanel Spacing="10" Grid.Column="3" Orientation="Horizontal">
+				<CheckBox Content="Show Hidden" IsChecked="{Binding ShowHidden}"/>
+			</StackPanel>
+		</Grid>
+
+		<v:PowerDataGrid Grid.Row="2" DragDrop.AllowDrop="True" IsReadOnly="True" CanUserResizeColumns="True"
+						 SelectionMode="Extended" CurrentlySelectedItems="{Binding SelectedItems, Mode=TwoWay}"
+						 AutoGenerateColumns="False" Items="{Binding FolderViewItems}" IsDoubleClicked="{Binding IsDoubleClicked, Mode=TwoWay}">
+			<v:PowerDataGrid.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Copy" Command="{Binding Copy}"/>
+					<MenuItem Header="Move" Command="{Binding Move}"/>
+					<Separator/>
+					<MenuItem Header="Remove" Command="{Binding Remove}"/>
+				</ContextMenu>
+			</v:PowerDataGrid.ContextMenu>
+			<v:PowerDataGrid.Columns>
+				<DataGridTextColumn Header="Name"  Binding="{Binding Name}"/>
+				<DataGridTextColumn Header="Size"  Binding="{Binding Size, Mode=OneWay, Converter={StaticResource sizeConverter}}"/>
+				<DataGridTextColumn Header="Date"  Binding="{Binding Date}"/>
+				<DataGridTextColumn Header="Extension"  Binding="{Binding Extension}"/>
+			</v:PowerDataGrid.Columns>
+		</v:PowerDataGrid>
+
+	</Grid>
+</UserControl>
